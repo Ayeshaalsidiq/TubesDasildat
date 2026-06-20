@@ -1,0 +1,5 @@
+Machine Learning Model,Accuracy,Precision,Recall,F1-Score
+K-Nearest Neighbors,93.44,98.03,93.44,95.66
+Decision Tree,59.53,98.21,59.53,73.75
+Support Vector Machine,52.87,98.02,52.87,68.32
+Neural Network,68.89,98.05,68.89,80.72
