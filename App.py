@@ -20,13 +20,18 @@ st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs
 # ==============================================================================
 custom_css = """
 <style>
-    /* Mengubah Warna Sidebar Menjadi Corporate Navy dengan Teks Terang */
+    /* --- 1. SEMBUNYIKAN MENU DEFAULT STREAMLIT --- */
+    [data-testid="stSidebarNav"] {
+        display: none !important;
+    }
+
+    /* --- 2. WARNA SIDEBAR CORPORATE NAVY --- */
     [data-testid="stSidebar"] {
         background-color: #0f172a !important;
         padding-top: 20px;
     }
     [data-testid="stSidebar"] * {
-        color: #e2e8f0 !important; 
+        color: #f8fafc !important; 
     }
     [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
         color: #38bdf8 !important; /* Warna biru muda untuk judul sidebar */
@@ -36,6 +41,21 @@ custom_css = """
         border-color: #334155 !important;
     }
 
+    /* --- 3. STYLING UNTUK CUSTOM MENU LINK DI SIDEBAR --- */
+    div[data-testid="stPageLink-NavLink"] {
+        background-color: #1e293b;
+        border-radius: 8px;
+        padding: 8px 12px;
+        margin-bottom: 12px;
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+    }
+    div[data-testid="stPageLink-NavLink"]:hover {
+        background-color: #334155;
+        border-left: 4px solid #0ea5e9;
+        transform: translateX(6px); /* Efek bergeser ke kanan saat disentuh mouse */
+    }
+
     /* Hero Section (Banner Atas) */
     .hero-container {
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -43,12 +63,15 @@ custom_css = """
         border-radius: 16px;
         text-align: center;
         margin-bottom: 30px;
-        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.4);
         border-bottom: 4px solid #0ea5e9;
     }
     .hero-title {
-        color: #ffffff;
-        font-size: 36px;
+        /* Membuat warna judul banner menjadi gradient biru muda ke ungu */
+        background: -webkit-linear-gradient(45deg, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 38px;
         font-weight: 800;
         margin-bottom: 10px;
         letter-spacing: 1px;
@@ -125,7 +148,12 @@ custom_css = """
         text-align: center;
         border: 1px solid #e2e8f0;
         height: 100%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .profile-card-container:hover {
+        transform: translateY(-6px);
+        border-color: #38bdf8; /* Garis pinggir biru saat disentuh mouse */
     }
     .p-name {
         font-size: 16px;
@@ -149,14 +177,27 @@ custom_css = """
 st.markdown(custom_css, unsafe_allow_html=True)
 
 # ==============================================================================
-# SIDEBAR CONTENT (Membantu agar warna sidebar terlihat)
+# SIDEBAR CONTENT (Navigasi Kustom 3 Menu Utama)
 # ==============================================================================
 with st.sidebar:
     st.markdown("## 🛒 Shoppers Portal")
-    st.markdown("Portal analisis data transaksi e-commerce tingkat lanjut.")
+    st.markdown("<p style='color: #94a3b8; font-size: 14px;'>Portal analisis data transaksi e-commerce tingkat lanjut.</p>", unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown("### 📌 Navigasi Menu")
-    st.markdown("Gunakan menu di atas untuk berpindah ke halaman prediksi.")
+    
+    st.markdown("### 📌 Menu Utama")
+    
+    # 1. Tombol Menu Home (Mengarah ke App.py)
+    st.page_link("App.py", label="Home App", icon="🏠")
+    
+    # 2. Tombol Menu Prediksi Belanja
+    if os.path.exists("pages/1_Prediksi_Belanja.py"):
+        st.page_link("pages/1_Prediksi_Belanja.py", label="Prediksi Belanja", icon="🛒")
+        
+    # 3. Tombol Menu Evaluasi Model
+    # PENTING: Ubah teks "pages/2_Evaluasi_Model.py" di bawah jika nama file Anda berbeda!
+    if os.path.exists("pages/2_Evaluasi_Model.py"):
+        st.page_link("pages/2_Evaluasi_Model.py", label="Evaluasi Model", icon="📊")
+
     st.markdown("---")
     st.success("🟢 Sistem berjalan optimal")
     st.info("💡 Model AI aktif dengan threshold ketat 92%.")
