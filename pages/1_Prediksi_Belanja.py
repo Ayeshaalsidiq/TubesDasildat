@@ -79,8 +79,8 @@ if st.button("Jalankan Prediksi Sistem"):
             probabilitas = model_terpilih.predict_proba(input_data)[0]
             peluang_membeli = float(probabilitas[1])
             
-            # Taktik Threshold Tuning: Jika kepastian membeli di bawah 92%, diklasifikasikan sebagai Batal/Gagal
-            if peluang_membeli < 0.92:
+            # Taktik Threshold Tuning: Jika kepastian membeli di bawah 50%, diklasifikasikan sebagai Batal/Gagal
+            if peluang_membeli < 0.50:
                 hasil_prediksi = 0
             else:
                 hasil_prediksi = 1
