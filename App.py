@@ -16,44 +16,24 @@ st.set_page_config(
 st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">', unsafe_allow_html=True)
 
 # ==============================================================================
-# INJEKSI CSS CUSTOM (Menggantikan assets/style.css agar langsung berjalan)
+# INJEKSI CSS CUSTOM
 # ==============================================================================
 custom_css = """
 <style>
-    /* --- 1. SEMBUNYIKAN MENU DEFAULT STREAMLIT --- */
-    [data-testid="stSidebarNav"] {
-        display: none !important;
-    }
-
-    /* --- 2. WARNA SIDEBAR CORPORATE NAVY --- */
+    /* --- WARNA SIDEBAR CORPORATE NAVY --- */
     [data-testid="stSidebar"] {
         background-color: #0f172a !important;
-        padding-top: 20px;
     }
-    [data-testid="stSidebar"] * {
-        color: #f8fafc !important; 
+    
+    /* Mengubah warna teks menu default Streamlit menjadi putih/terang */
+    [data-testid="stSidebarNav"] span {
+        color: #f8fafc !important;
+        font-size: 15px;
     }
-    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
-        color: #38bdf8 !important; /* Warna biru muda untuk judul sidebar */
-        font-weight: 700;
-    }
-    hr {
-        border-color: #334155 !important;
-    }
-
-    /* --- 3. STYLING UNTUK CUSTOM MENU LINK DI SIDEBAR --- */
-    div[data-testid="stPageLink-NavLink"] {
-        background-color: #1e293b;
-        border-radius: 8px;
-        padding: 8px 12px;
-        margin-bottom: 12px;
-        border-left: 4px solid transparent;
-        transition: all 0.3s ease;
-    }
-    div[data-testid="stPageLink-NavLink"]:hover {
-        background-color: #334155;
-        border-left: 4px solid #0ea5e9;
-        transform: translateX(6px); /* Efek bergeser ke kanan saat disentuh mouse */
+    
+    /* Warna saat menu di-hover */
+    [data-testid="stSidebarNav"] a:hover {
+        background-color: #1e293b !important;
     }
 
     /* Hero Section (Banner Atas) */
@@ -67,7 +47,6 @@ custom_css = """
         border-bottom: 4px solid #0ea5e9;
     }
     .hero-title {
-        /* Membuat warna judul banner menjadi gradient biru muda ke ungu */
         background: -webkit-linear-gradient(45deg, #38bdf8, #818cf8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -153,7 +132,7 @@ custom_css = """
     }
     .profile-card-container:hover {
         transform: translateY(-6px);
-        border-color: #38bdf8; /* Garis pinggir biru saat disentuh mouse */
+        border-color: #38bdf8;
     }
     .p-name {
         font-size: 16px;
@@ -176,31 +155,6 @@ custom_css = """
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 
-# ==============================================================================
-# SIDEBAR CONTENT (Navigasi Kustom 3 Menu Utama)
-# ==============================================================================
-with st.sidebar:
-    st.markdown("## 🛒 Shoppers Portal")
-    st.markdown("<p style='color: #94a3b8; font-size: 14px;'>Portal analisis data transaksi e-commerce tingkat lanjut.</p>", unsafe_allow_html=True)
-    st.markdown("---")
-    
-    st.markdown("### 📌 Menu Utama")
-    
-    # 1. Tombol Menu Home (Mengarah ke App.py)
-    st.page_link("App.py", label="Home App", icon="🏠")
-    
-    # 2. Tombol Menu Prediksi Belanja
-    if os.path.exists("pages/1_Prediksi_Belanja.py"):
-        st.page_link("pages/1_Prediksi_Belanja.py", label="Prediksi Belanja", icon="🛒")
-        
-    # 3. Tombol Menu Evaluasi Model
-    # PENTING: Ubah teks "pages/2_Evaluasi_Model.py" di bawah jika nama file Anda berbeda!
-    if os.path.exists("pages/2_Evaluasi_Model.py"):
-        st.page_link("pages/2_Evaluasi_Model.py", label="Evaluasi Model", icon="📊")
-
-    st.markdown("---")
-    st.success("🟢 Sistem berjalan optimal")
-    st.info("💡 Model AI aktif dengan threshold ketat 92%.")
 
 # ==============================================================================
 # 1. HERO SECTION (BANNER UTAMA)
@@ -293,7 +247,6 @@ with col_ev1:
     """, unsafe_allow_html=True)
 
 with col_ev2:
-    # Memuat data leaderboard
     path_leaderboard = os.path.join('data', 'leaderboard_performa.csv')
     if os.path.exists(path_leaderboard):
         df_lb = pd.read_csv(path_leaderboard)
