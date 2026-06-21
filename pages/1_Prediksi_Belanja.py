@@ -79,20 +79,11 @@ if st.button("Jalankan Prediksi Sistem"):
             probabilitas = model_terpilih.predict_proba(input_data)[0]
             peluang_membeli = float(probabilitas[1])
             
-            # ATURAN AMBANG BATAS KHUSUS (Memastikan Hanya KNN yang Lolos Berhasil)
-            if pilihan_model == 'K-Nearest Neighbors':
-                # Longgarkan batas untuk KNN agar dia berani memprediksi Membeli
-                if peluang_membeli < 0.50:
-                    hasil_prediksi = 0
-                else:
-                    hasil_prediksi = 1
+            # Taktik Threshold Tuning: Jika kepastian membeli di bawah 92%, diklasifikasikan sebagai Batal/Gagal
+            if peluang_membeli < 0.92:
+                hasil_prediksi = 0
             else:
-                # Perketat model lainnya (DT, SVM, NN) agar dipaksa memprediksi Gagal
-                if peluang_membeli < 0.99:
-                    hasil_prediksi = 0
-                else:
-                    hasil_prediksi = 1
-                    
+                hasil_prediksi = 1
         except Exception as e:
             # Fallback jika terjadi kegagalan pembacaan probabilitas pada model tertentu
             hasil_prediksi = model_terpilih.predict(input_data)[0]
