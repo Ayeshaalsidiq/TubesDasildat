@@ -2,6 +2,9 @@ import streamlit as st
 import os
 import pandas as pd
 
+# ==============================================================================
+# KONFIGURASI HALAMAN
+# ==============================================================================
 st.set_page_config(
     page_title="Shoppers Predictor — Analytics Portal",
     page_icon="🛒",
@@ -9,21 +12,157 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Load FontAwesome Icons untuk merender ikon list secara valid dan profesional
+# Load FontAwesome Icons untuk ikon
 st.markdown('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">', unsafe_allow_html=True)
 
 # ==============================================================================
-# INJEKSI FILE CSS EKSTERNAL (assets/style.css)
+# INJEKSI CSS CUSTOM (Menggantikan assets/style.css agar langsung berjalan)
 # ==============================================================================
-css_path = os.path.join("assets", "style.css")
-if os.path.exists(css_path):
-    with open(css_path, "r", encoding="utf-8") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-else:
-    st.error("⚠️ File 'assets/style.css' tidak ditemukan. Pastikan folder dan file CSS sudah diperbarui!")
+custom_css = """
+<style>
+    /* Mengubah Warna Sidebar Menjadi Corporate Navy dengan Teks Terang */
+    [data-testid="stSidebar"] {
+        background-color: #0f172a !important;
+        padding-top: 20px;
+    }
+    [data-testid="stSidebar"] * {
+        color: #e2e8f0 !important; 
+    }
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
+        color: #38bdf8 !important; /* Warna biru muda untuk judul sidebar */
+        font-weight: 700;
+    }
+    hr {
+        border-color: #334155 !important;
+    }
+
+    /* Hero Section (Banner Atas) */
+    .hero-container {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 40px 30px;
+        border-radius: 16px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+        border-bottom: 4px solid #0ea5e9;
+    }
+    .hero-title {
+        color: #ffffff;
+        font-size: 36px;
+        font-weight: 800;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+    .hero-subtitle {
+        color: #94a3b8;
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+    /* Header Tiap Section */
+    .section-header {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    /* Kartu (Cards) untuk Konten */
+    .consulting-card, .premium-card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        height: 100%;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        border: 1px solid #e2e8f0;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .consulting-card:hover, .premium-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Badge Label */
+    .badge-blue {
+        background-color: #e0f2fe;
+        color: #0369a1;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    /* List Item Custom */
+    .data-list {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 10px;
+    }
+    .data-list li {
+        font-size: 13.5px;
+        color: #475569;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+    }
+    .data-list i {
+        color: #0ea5e9;
+        margin-right: 10px;
+        width: 16px;
+        text-align: center;
+    }
+
+    /* Profile Cards (Tim Pengembang) */
+    .profile-card-container {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid #e2e8f0;
+        height: 100%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .p-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+    .p-role {
+        font-size: 13px;
+        font-weight: 600;
+        color: #0ea5e9;
+        margin-bottom: 12px;
+    }
+    .p-desc {
+        font-size: 12.5px;
+        color: #64748b;
+        line-height: 1.5;
+    }
+</style>
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
 
 # ==============================================================================
-# 1. HERO SECTION (BANNER UTAMA SLATE GREY & CORPORATE NAVY)
+# SIDEBAR CONTENT (Membantu agar warna sidebar terlihat)
+# ==============================================================================
+with st.sidebar:
+    st.markdown("## 🛒 Shoppers Portal")
+    st.markdown("Portal analisis data transaksi e-commerce tingkat lanjut.")
+    st.markdown("---")
+    st.markdown("### 📌 Navigasi Menu")
+    st.markdown("Gunakan menu di atas untuk berpindah ke halaman prediksi.")
+    st.markdown("---")
+    st.success("🟢 Sistem berjalan optimal")
+    st.info("💡 Model AI aktif dengan threshold ketat 92%.")
+
+# ==============================================================================
+# 1. HERO SECTION (BANNER UTAMA)
 # ==============================================================================
 st.markdown("""
     <div class="hero-container">
@@ -32,27 +171,26 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-
 # ==============================================================================
-# 2. EXECUTIVE SUMMARY & DATABASE ARCHITECTURE (3 COLUMNS GRID)
+# 2. EXECUTIVE SUMMARY & DATABASE ARCHITECTURE
 # ==============================================================================
 st.markdown("<div class='section-header'>Executive Summary & Data Architecture</div>", unsafe_allow_html=True)
 
-col_db1, col_db2, col_db3 = st.columns([1.2, 1, 1], gap="large")
+col_db1, col_db2, col_db3 = st.columns([1.2, 1, 1], gap="medium")
 
 with col_db1:
     st.markdown("""
         <div class="consulting-card">
             <span class="badge-blue">Dataset Overview</span>
-            <h4 style="margin: 15px 0 10px 0; font-weight: 600; color: #0f172a;">📦 Database Specification</h4>
-            <p style="font-size: 13.5px; color: #64748b; line-height: 1.5;">
+            <h4 style="margin: 10px 0; font-weight: 700; color: #0f172a;">📦 Database Specification</h4>
+            <p style="font-size: 13.5px; color: #64748b; line-height: 1.6;">
                 Database utama memuat total <b>20.653 baris data riwayat transaksi</b> belanja dari lapangan dengan karakteristik ketimpangan kelas target (Highly Imbalanced Data) yang sangat kontras:
             </p>
             <ul class="data-list">
                 <li><i class="fas fa-database"></i> <b>Total Records:</b> 20.653 baris data</li>
-                <li><i class="fas fa-check-circle"></i> <b>Kelas Sukses (Delivered):</b> 20.471 baris data</li>
-                <li><i class="fas fa-times-circle"></i> <b>Kelas Gagal (Cancelled/Missed):</b> 182 baris data</li>
-                <li><i class="fas fa-balance-scale"></i> <b>Balancing Teknik:</b> SMOTE (Data Training Only)</li>
+                <li><i class="fas fa-check-circle" style="color: #10b981;"></i> <b>Kelas Sukses (Delivered):</b> 20.471 baris</li>
+                <li><i class="fas fa-times-circle" style="color: #ef4444;"></i> <b>Kelas Gagal (Cancelled):</b> 182 baris</li>
+                <li><i class="fas fa-balance-scale"></i> <b>Balancing Teknik:</b> SMOTE (Data Training)</li>
             </ul>
         </div>
     """, unsafe_allow_html=True)
@@ -61,16 +199,16 @@ with col_db2:
     st.markdown("""
         <div class="consulting-card">
             <span class="badge-blue">Feature Engineering</span>
-            <h4 style="margin: 15px 0 10px 0; font-weight: 600; color: #0f172a;">⚙️ Arsitektur 6 Fitur Analitis</h4>
-            <p style="font-size: 13.5px; color: #64748b; line-height: 1.5;">
+            <h4 style="margin: 10px 0; font-weight: 700; color: #0f172a;">⚙️ Arsitektur 6 Fitur</h4>
+            <p style="font-size: 13.5px; color: #64748b; line-height: 1.6;">
                 Sistem mengisolasi 6 parameter operasional murni angka dari database untuk memproses pemodelan secara objektif:
             </p>
             <ul class="data-list">
-                <li><i class="fas fa-route"></i> <b>Distance_Num:</b> Jarak kurir ke pemesan (Maks. 30 km).</li>
-                <li><i class="fas fa-file-invoice-dollar"></i> <b>Bill subtotal:</b> Nominal harga menu belanja bruto.</li>
-                <li><i class="fas fa-box"></i> <b>Packaging charges:</b> Biaya pengemasan barang.</li>
-                <li><i class="fas fa-tags"></i> <b>Discounts:</b> Potongan Harga Promo & Member Gold.</li>
-                <li><i class="fas fa-calculator"></i> <b>Total:</b> Akumulasi linear pembayaran otomatis.</li>
+                <li><i class="fas fa-route"></i> <b>Distance_Num:</b> Jarak kurir (Maks 30km)</li>
+                <li><i class="fas fa-file-invoice-dollar"></i> <b>Bill subtotal:</b> Harga bruto</li>
+                <li><i class="fas fa-box"></i> <b>Packaging:</b> Biaya kemasan</li>
+                <li><i class="fas fa-tags"></i> <b>Discounts:</b> Potongan harga</li>
+                <li><i class="fas fa-calculator"></i> <b>Total:</b> Akumulasi bayar</li>
             </ul>
         </div>
     """, unsafe_allow_html=True)
@@ -79,120 +217,116 @@ with col_db3:
     st.markdown("""
         <div class="consulting-card">
             <span class="badge-blue">Business Objective</span>
-            <h4 style="margin: 15px 0 10px 0; font-weight: 600; color: #0f172a;">🎯 Target Variabel Dependen</h4>
+            <h4 style="margin: 10px 0; font-weight: 700; color: #0f172a;">🎯 Target Variabel</h4>
             <p style="font-size: 13.5px; color: #475569; line-height: 1.6;">
-                Isi dari target biner yang diprediksi merujuk pada konversi kolom status pesanan (Order Status) ke angka mutlak:
+                Isi dari target biner yang diprediksi merujuk pada konversi kolom status pesanan ke angka mutlak:
             </p>
-            <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-top: 15px; border: 1px solid #e2e8f0;">
-                <p style="font-size: 13px; margin: 0; color: #1e293b;"><i class="fas fa-square" style="color: #0284c7; margin-right: 5px;"></i> <b>Nilai [1] (Delivered):</b> Transaksi valid, aman, dan sukses.</p>
-                <p style="font-size: 13px; margin: 8px 0 0 0; color: #1e293b;"><i class="fas fa-square" style="color: #64748b; margin-right: 5px;"></i> <b>Nilai [0] (Cancelled):</b> Transaksi berisiko tinggi atau pesanan fiktif.</p>
+            <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #0284c7;">
+                <p style="font-size: 13px; margin: 0; color: #0f172a;"><b>[1] Delivered:</b><br>Transaksi valid, aman, & sukses.</p>
+            </div>
+            <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-top: 10px; border-left: 4px solid #ef4444;">
+                <p style="font-size: 13px; margin: 0; color: #0f172a;"><b>[0] Cancelled:</b><br>Transaksi berisiko/fiktif.</p>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
-
 # ==============================================================================
-# 3. GLOBAL PERFORMANCE EVALUATION (DIFOKUSKAN PADA RECALL + TABEL PREMIUM BLUES)
+# 3. GLOBAL PERFORMANCE EVALUATION
 # ==============================================================================
 st.markdown("<div class='section-header'>Global Performance Evaluation</div>", unsafe_allow_html=True)
 
-col_ev1, col_ev2 = st.columns([1, 1.8], gap="large")
+col_ev1, col_ev2 = st.columns([1, 1.8], gap="medium")
 
 with col_ev1:
     st.markdown("""
-    <div class="consulting-card" style="background: #ffffff;">
-        <h5 style="color: #0f172a; font-weight: 600; margin-bottom: 10px;"><i class="fas fa-chart-line" style="color:#0ea5e9; margin-right: 8px;"></i> Recall Priority Analysis</h5>
-        <p class="card-body" style="font-size: 13.5px; color: #64748b; line-height: 1.6; margin: 0;">
-            Dalam kasus klasifikasi ketimpangan data belanja ini, fokus analisis kelompok kami dipusatkan pada metrik <b>Recall (Sensitivitas)</b>, bukan akurasi standar belaka.<br><br>
-            Recall yang tinggi menjamin sistem mampu mendeteksi sebanyak mungkin transaksi yang berpotensi gagal/batal (memperkecil celah <i>False Negative</i>). 
-            Jika nilai Recall lemah, sistem akan meloloskan pesanan palsu/batal ke kurir, yang berakibat pada kerugian finansial merchant dan waktu kurir secara nyata.
+    <div class="consulting-card">
+        <h5 style="color: #0f172a; font-weight: 700; margin-bottom: 15px; font-size: 18px;">
+            <i class="fas fa-chart-line" style="color:#0ea5e9; margin-right: 8px;"></i> Recall Priority Analysis
+        </h5>
+        <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0;">
+            Dalam kasus klasifikasi ketimpangan data belanja ini, fokus analisis kami dipusatkan pada metrik <b>Recall (Sensitivitas)</b>, bukan akurasi standar belaka.<br><br>
+            Recall yang tinggi menjamin sistem mampu mendeteksi sebanyak mungkin transaksi yang berpotensi gagal/batal. 
+            Jika nilai Recall lemah, sistem akan meloloskan pesanan palsu ke kurir, yang berakibat pada kerugian finansial nyata.
         </p>
     </div>
     """, unsafe_allow_html=True)
 
 with col_ev2:
-    # Memuat data leaderboard hasil training lengkap (Accuracy, Precision, Recall, F1)
+    # Memuat data leaderboard
     path_leaderboard = os.path.join('data', 'leaderboard_performa.csv')
     if os.path.exists(path_leaderboard):
         df_lb = pd.read_csv(path_leaderboard)
-        
-        # Penamaan kolom visualisasi header tabel agar rapi dan informatif
         df_lb.columns = ['Machine Learning Model', 'Accuracy (%)', 'Precision (%)', 'Recall (%)', 'F1-Score (%)']
         
-        # Terapkan gradient warna Blues pada metrik performa secara aman lewat Streamlit dataframe
         try:
-            styled_df = df_lb.style.background_gradient(cmap='Blues', subset=['Accuracy (%)', 'Precision (%)', 'Recall (%)', 'F1-Score (%)'])\
-                                   .format(precision=2)
-            st.write("📊 **Model Metrics Comparison Matrix (Data Uji Murni)**")
+            styled_df = df_lb.style.background_gradient(cmap='Blues', subset=['Accuracy (%)', 'Precision (%)', 'Recall (%)', 'F1-Score (%)']).format(precision=2)
+            st.markdown("<p style='font-weight: 600; color: #0f172a; margin-bottom: 10px;'>📊 Model Metrics Comparison Matrix (Data Uji Murni)</p>", unsafe_allow_html=True)
             st.dataframe(styled_df, use_container_width=True, hide_index=True)
         except Exception:
-            # Fallback tanpa gradien warna jika library matplotlib belum ter-install sempurna
-            st.write("📊 **Model Metrics Comparison Matrix (Data Uji Murni)**")
+            st.markdown("<p style='font-weight: 600; color: #0f172a; margin-bottom: 10px;'>📊 Model Metrics Comparison Matrix (Data Uji Murni)</p>", unsafe_allow_html=True)
             st.dataframe(df_lb, use_container_width=True, hide_index=True)
     else:
-        st.warning("📊 File leaderboard_performa.csv belum ditemukan. Silakan jalankan file 'train_and_evaluate.py' terlebih dahulu di terminal untuk membuat data metrik lengkap!")
-
+        st.warning("📊 File 'data/leaderboard_performa.csv' belum ditemukan. Pastikan data sudah ada!")
 
 # ==============================================================================
 # 4. TEORI JALUR 4 MODEL MACHINE LEARNING
 # ==============================================================================
 st.markdown("<div class='section-header'>Arsitektur & Teori Core Algoritma Klasifikasi</div>", unsafe_allow_html=True)
 
-col_mod1, col_mod2, col_mod3, col_mod4 = st.columns(4, gap="medium")
+col_mod1, col_mod2, col_mod3, col_mod4 = st.columns(4, gap="small")
 
 with col_mod1:
     st.markdown("""
         <div class="premium-card" style="border-top: 4px solid #0284c7;">
-            <div style="font-weight:700; font-size:15px; color:#0f172a; margin-bottom:8px;">1. K-Nearest Neighbors</div>
-            <p class="card-body" style="font-size:12.5px; color: #475569;">
-                <b>Instance-Based Learning:</b> Mengklasifikasikan objek transaksi baru berdasarkan kedekatan klaster spasial (<em>Euclidean distance</em>) terhadap mayoritas 5 data tetangga terdekat.
+            <div style="font-weight:700; font-size:16px; color:#0f172a; margin-bottom:10px;">1. K-Nearest Neighbors</div>
+            <p style="font-size:13px; color: #475569; line-height: 1.5;">
+                <b>Instance-Based Learning:</b> Mengklasifikasikan objek transaksi baru berdasarkan kedekatan klaster spasial (<em>Euclidean distance</em>) terhadap 5 data tetangga terdekat.
             </p>
         </div>
     """, unsafe_allow_html=True)
 
 with col_mod2:
     st.markdown("""
-        <div class="premium-card" style="border-top: 4px solid #334155;">
-            <div style="font-weight:700; font-size:15px; color:#0f172a; margin-bottom:8px;">2. Decision Tree</div>
-            <p class="card-body" style="font-size:12.5px; color: #475569;">
-                <b>Hierarchical Split Rules:</b> Memetakan diagram pohon keputusan terstruktur menggunakan pemisahan nilai indeks ketidakmurnian Gini (<em>Gini Impurity</em>) dengan kedalaman pohon diatur maks 6 tingkat.
+        <div class="premium-card" style="border-top: 4px solid #10b981;">
+            <div style="font-weight:700; font-size:16px; color:#0f172a; margin-bottom:10px;">2. Decision Tree</div>
+            <p style="font-size:13px; color: #475569; line-height: 1.5;">
+                <b>Hierarchical Split:</b> Memetakan diagram pohon keputusan terstruktur menggunakan pemisahan nilai indeks ketidakmurnian (<em>Gini Impurity</em>).
             </p>
         </div>
     """, unsafe_allow_html=True)
 
 with col_mod3:
     st.markdown("""
-        <div class="premium-card" style="border-top: 4px solid #0284c7;">
-            <div style="font-weight:700; font-size:15px; color:#0f172a; margin-bottom:8px;">3. Support Vector Machine</div>
-            <p class="card-body" style="font-size:12.5px; color: #475569;">
-                <b>Hyperplane Maximization:</b> Memisahkan ruang dimensi data secara optimal dengan batas margin terbesar menggunakan bantuan fungsi <em>Kernel RBF</em> serta kalibrasi kecocokan probabilitas.
+        <div class="premium-card" style="border-top: 4px solid #f59e0b;">
+            <div style="font-weight:700; font-size:16px; color:#0f172a; margin-bottom:10px;">3. Support Vector Machine</div>
+            <p style="font-size:13px; color: #475569; line-height: 1.5;">
+                <b>Hyperplane:</b> Memisahkan ruang dimensi data secara optimal dengan batas margin terbesar menggunakan bantuan fungsi <em>Kernel RBF</em>.
             </p>
         </div>
     """, unsafe_allow_html=True)
 
 with col_mod4:
     st.markdown("""
-        <div class="premium-card" style="border-top: 4px solid #334155;">
-            <div style="font-weight:700; font-size:15px; color:#0f172a; margin-bottom:8px;">4. Neural Network (MLP)</div>
-            <p class="card-body" style="font-size:12.5px; color: #475569;">
-                <b>Multi-Layer Perceptron:</b> Memodelkan interaksi sinyal data non-linear kompleks lewat interkoneksi 2 hidden layer (50 & 25 neuron) menggunakan mekanisme optimasi rambatan balik.
+        <div class="premium-card" style="border-top: 4px solid #8b5cf6;">
+            <div style="font-weight:700; font-size:16px; color:#0f172a; margin-bottom:10px;">4. Neural Network (MLP)</div>
+            <p style="font-size:13px; color: #475569; line-height: 1.5;">
+                <b>Multi-Layer Perceptron:</b> Memodelkan interaksi sinyal data non-linear lewat interkoneksi 2 hidden layer menggunakan optimasi rambatan balik.
             </p>
         </div>
     """, unsafe_allow_html=True)
-
 
 # ==============================================================================
 # 5. STRUKTUR TIM PENGEMBANG & SPESIALISASI
 # ==============================================================================
 st.markdown("<div class='section-header'>Struktur Pengembang & Spesialisasi Model</div>", unsafe_allow_html=True)
 
-col_team1, col_team2, col_team3, col_team4 = st.columns(4, gap="medium")
+col_team1, col_team2, col_team3, col_team4 = st.columns(4, gap="small")
 
 team_data = [
-    {"name": "Ayesha Al Sidiq", "role": "SVM Specialist", "desc": "Fokus pada kalkulasi penemuan hyperplane optimal, penyelarasan hyperparameter penalti C, serta integrasi pemetaan probabilistik model."},
-    {"name": "Saskia Naila Sagita", "role": "KNN Specialist", "desc": "Bertanggung jawab penuh atas visualisasi sebaran metrik kedekatan klaster data transaksi serta validasi pembobotan tetangga terdekat."},
-    {"name": "Fahreza Azhar Ramadhan", "role": "DT Specialist", "desc": "Berfokus pada analisis kriteria penentuan nodus akar keputusan (root node) serta pencegahan over-parameterisasi kedalaman cabang."},
-    {"name": "Aninda Irfani", "role": "NN Specialist", "desc": "Bertanggung jawab penuh dalam penyusunan bobot bias arsitektur multi-layer neural network serta minimalisasi laju loss error iterasi."}
+    {"name": "Ayesha Al Sidiq", "role": "SVM Specialist", "desc": "Fokus kalkulasi penemuan hyperplane optimal, penyelarasan hyperparameter, dan probabilitas."},
+    {"name": "Saskia Naila Sagita", "role": "KNN Specialist", "desc": "Visualisasi sebaran metrik kedekatan klaster data transaksi serta validasi pembobotan."},
+    {"name": "Fahreza Azhar Ramadhan", "role": "DT Specialist", "desc": "Analisis kriteria penentuan nodus akar keputusan dan pencegahan over-parameterisasi."},
+    {"name": "Aninda Irfani", "role": "NN Specialist", "desc": "Penyusunan bobot bias arsitektur multi-layer neural network & minimalisasi loss error."}
 ]
 
 cols_list = [col_team1, col_team2, col_team3, col_team4]
@@ -206,22 +340,22 @@ for idx, member in enumerate(team_data):
         </div>
         """, unsafe_allow_html=True)
 
-
 # ==============================================================================
 # 6. BUSINESS SAFETY LOGIC (THRESHOLD TUNING INFO)
 # ==============================================================================
 st.markdown("<div class='section-header'>Kebijakan Filter & Kontrol Sensitivitas Bisnis</div>", unsafe_allow_html=True)
 st.markdown("""
-    <div class="premium-card" style="background: linear-gradient(90deg, #ffffff 75%, #f8fafc 100%); border-left: 5px solid #0f172a;">
-        <p class="card-body" style="color: #334155; font-size: 13.5px; margin: 0;">
-            <strong>Mekanisme Penilaian Ketat (Probability Thresholding 92%):</strong> 
+    <div class="premium-card" style="background: #f8fafc; border-left: 6px solid #0f172a; padding: 25px;">
+        <h4 style="margin-top:0; color:#0f172a; font-size:16px;">🛡️ Mekanisme Penilaian Ketat (Probability Thresholding 92%)</h4>
+        <p style="color: #475569; font-size: 14px; margin: 10px 0 0 0; line-height: 1.6;">
             Karena distribusi dataset awal bersifat timpang ekstrem, platform analitik ini mengabaikan batas toleransi bawaan default model (50%). 
-            Sistem mengunci regulasi ketat: Apabila tingkat keyakinan model matematika untuk kelas sukses bernilai di bawah <b>92.00%</b>, 
-            back-end website secara otomatis membatalkan transaksi dan mengubah keputusan menjadi status risiko tinggi (<strong>Cancelled/Missed Order</strong>). 
-            Hal ini bertujuan memberikan lapisan keamanan preventif bagi merchant e-commerce dari ancaman pesanan fiktif.
+            Sistem mengunci regulasi ketat: Apabila tingkat keyakinan model untuk kelas sukses bernilai di bawah <b>92.00%</b>, 
+            sistem otomatis membatalkan transaksi dan mengubah keputusan menjadi status risiko tinggi (<strong>Cancelled/Missed Order</strong>). 
+            Hal ini memberikan lapisan keamanan preventif bagi merchant dari ancaman pesanan fiktif.
         </p>
     </div>
 """, unsafe_allow_html=True)
 
-# Footer Platform Akademik
-st.markdown("<br><p style='text-align: center; color: #94a3b8; font-size: 12px; font-weight:500;'>Proyek Praktikum Dasar Ilmu Data 2026 • Kurikulum Diploma (D3) Sistem Informasi • Telkom University</p>", unsafe_allow_html=True)
+# Footer
+st.markdown("<hr style='margin-top: 50px;'>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #94a3b8; font-size: 13px; font-weight:500; margin-bottom: 30px;'>Proyek Praktikum Dasar Ilmu Data 2026 • Kurikulum Diploma (D3) Sistem Informasi • Telkom University</p>", unsafe_allow_html=True)
